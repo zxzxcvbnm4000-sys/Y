@@ -1,0 +1,360 @@
+```html
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>عروض اليوم</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial,Tahoma,sans-serif;
+  background:#0d0d0d;
+  color:#fff;
+  min-height:100vh;
+  padding:18px 12px;
+}
+
+.container{
+  width:100%;
+  max-width:430px;
+  margin:auto;
+}
+
+.title{
+  text-align:center;
+  font-size:25px;
+  font-weight:800;
+  margin-bottom:6px;
+}
+
+.subtitle{
+  text-align:center;
+  color:#aaa;
+  font-size:13px;
+  margin-bottom:18px;
+}
+
+.offer{
+  background:#171717;
+  border:1px solid #292929;
+  border-radius:15px;
+  padding:14px;
+  margin-bottom:10px;
+  cursor:pointer;
+  transition:.2s;
+  text-align:center;
+}
+
+.offer:hover{
+  border-color:#e60000;
+}
+
+.offer.selected{
+  border:2px solid #e60000;
+  background:#211111;
+}
+
+.offer-name{
+  font-size:19px;
+  font-weight:bold;
+}
+
+.price{
+  color:#ff3333;
+  font-size:22px;
+  font-weight:800;
+  margin-top:4px;
+}
+
+.form{
+  background:#171717;
+  border-radius:15px;
+  padding:16px;
+  margin-top:14px;
+}
+
+label{
+  display:block;
+  font-size:14px;
+  margin-bottom:7px;
+  color:#ddd;
+}
+
+input{
+  width:100%;
+  height:46px;
+  border:none;
+  outline:none;
+  border-radius:10px;
+  background:#242424;
+  color:#fff;
+  padding:0 13px;
+  font-size:16px;
+  margin-bottom:14px;
+  text-align:right;
+}
+
+.password-options{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:7px;
+  margin-bottom:14px;
+}
+
+.password-option{
+  background:#242424;
+  border:1px solid #333;
+  border-radius:9px;
+  padding:11px;
+  text-align:center;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.password-option.selected{
+  background:#e60000;
+  border-color:#e60000;
+}
+
+.cash-box{
+  background:#202020;
+  border-radius:10px;
+  padding:11px;
+  margin-bottom:14px;
+}
+
+.cash-title{
+  color:#aaa;
+  font-size:12px;
+  margin-bottom:4px;
+}
+
+.cash-number{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+
+.cash-number span{
+  font-size:19px;
+  font-weight:bold;
+  direction:ltr;
+}
+
+.copy-btn{
+  background:#333;
+  color:#fff;
+  border:0;
+  border-radius:7px;
+  padding:7px 10px;
+  cursor:pointer;
+}
+
+.submit{
+  width:100%;
+  height:48px;
+  border:0;
+  border-radius:10px;
+  background:#555;
+  color:#aaa;
+  font-size:16px;
+  font-weight:bold;
+  cursor:not-allowed;
+}
+
+.submit.active{
+  background:#e60000;
+  color:#fff;
+  cursor:pointer;
+}
+
+.note{
+  text-align:center;
+  color:#777;
+  font-size:11px;
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="title">🔥 عرض اليوم 🔥</div>
+  <div class="subtitle">اختار الباقة واملأ البيانات لإرسال الطلب</div>
+
+  <div class="offer" data-package="5200 فليكس" data-price="100" onclick="selectPackage(this)">
+    <div class="offer-name">5200 فليكس</div>
+    <div class="price">100 جنيه</div>
+  </div>
+
+  <div class="offer" data-package="10400" data-price="200" onclick="selectPackage(this)">
+    <div class="offer-name">10400</div>
+    <div class="price">200 جنيه</div>
+  </div>
+
+  <div class="form">
+
+    <label>رقم الموبايل</label>
+    <input
+      type="tel"
+      id="phone"
+      placeholder="اكتب رقم الموبايل"
+      maxlength="11"
+      oninput="checkForm()"
+    >
+
+    <label>الباسورد</label>
+
+    <div class="password-options">
+
+      <div class="password-option"
+           data-value="معايا الباسورد"
+           onclick="selectPassword(this)">
+        معايا الباسورد
+      </div>
+
+      <div class="password-option"
+           data-value="عملت الباسورد قبل كده"
+           onclick="selectPassword(this)">
+        عملت الباسورد قبل كده
+      </div>
+
+      <div class="password-option"
+           data-value="معرفش / أول مرة"
+           onclick="selectPassword(this)">
+        معرفش / أول مرة
+      </div>
+
+    </div>
+
+    <div class="cash-box">
+      <div class="cash-title">رقم الكاش للدفع</div>
+
+      <div class="cash-number">
+        <span id="cashNumber">01001621853</span>
+        <button class="copy-btn" onclick="copyCash()">نسخ</button>
+      </div>
+    </div>
+
+    <button class="submit" id="submitBtn" onclick="sendWhatsApp()">
+      إرسال الطلب عبر واتساب
+    </button>
+
+    <div class="note">
+      اختار الباقة واكتب رقمك وحدد حالة الباسورد لإرسال الطلب
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+let selectedPackage = "";
+let selectedPrice = "";
+let selectedPassword = "";
+
+function selectPackage(element){
+
+  document.querySelectorAll(".offer").forEach(item=>{
+    item.classList.remove("selected");
+  });
+
+  element.classList.add("selected");
+
+  selectedPackage = element.dataset.package;
+  selectedPrice = element.dataset.price;
+
+  checkForm();
+}
+
+function selectPassword(element){
+
+  document.querySelectorAll(".password-option").forEach(item=>{
+    item.classList.remove("selected");
+  });
+
+  element.classList.add("selected");
+
+  selectedPassword = element.dataset.value;
+
+  checkForm();
+}
+
+function checkForm(){
+
+  const phone = document.getElementById("phone").value.trim();
+  const btn = document.getElementById("submitBtn");
+
+  if(
+    selectedPackage &&
+    selectedPassword &&
+    /^01[0-9]{9}$/.test(phone)
+  ){
+    btn.classList.add("active");
+  }else{
+    btn.classList.remove("active");
+  }
+}
+
+function copyCash(){
+
+  navigator.clipboard.writeText("01001621853");
+
+  const btn = document.querySelector(".copy-btn");
+  const oldText = btn.innerText;
+
+  btn.innerText = "تم النسخ";
+
+  setTimeout(()=>{
+    btn.innerText = oldText;
+  },1200);
+}
+
+function sendWhatsApp(){
+
+  const phone = document.getElementById("phone").value.trim();
+
+  if(
+    !selectedPackage ||
+    !selectedPassword ||
+    !/^01[0-9]{9}$/.test(phone)
+  ){
+    return;
+  }
+
+  const message =
+`🔥 طلب جديد
+
+📱 رقم العميل: ${phone}
+📦 الباقة: ${selectedPackage}
+💰 السعر: ${selectedPrice} جنيه
+🔐 حالة الباسورد: ${selectedPassword}
+
+💳 رقم الكاش: 01001621853`;
+
+  const whatsappNumber = "201001621853";
+
+  const url =
+    "https://wa.me/" +
+    whatsappNumber +
+    "?text=" +
+    encodeURIComponent(message);
+
+  window.location.href = url;
+}
+</script>
+
+</body>
+</html>
+```
+  
